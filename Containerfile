@@ -1,8 +1,10 @@
 # Build smbmetrics
-FROM docker.io/golang:1.21 as builder
+FROM --platform=${BUILDPLATFORM:-linux/amd64} docker.io/golang:1.21 AS builder
 ARG GIT_VERSION="(unset)"
 ARG COMMIT_ID="(unset)"
-ARG ARCH=""
+# these are created by docker because we've used --platform with the buildx command
+ARG TARGETOS
+ARG TARGETARCH
 
 WORKDIR /workspace
 # Copy the Go Modules manifests
@@ -17,7 +19,7 @@ COPY cmd cmd
 COPY internal internal
 
 # Build
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=${ARCH} GO111MODULE=on \
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} GO111MODULE=on \
     go build -a \
     -ldflags "-X main.Version=${GIT_VERSION} -X main.CommitID=${COMMIT_ID}" \
     -o smbmetrics cmd/main.go
