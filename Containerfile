@@ -2,6 +2,7 @@
 FROM --platform=${BUILDPLATFORM:-linux/amd64} docker.io/golang:1.21 AS builder
 ARG GIT_VERSION="(unset)"
 ARG COMMIT_ID="(unset)"
+ARG SAMBA_SERVER_TAG="latest"
 # these are created by docker because we've used --platform with the buildx command
 ARG TARGETOS
 ARG TARGETARCH
@@ -25,7 +26,7 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} GO111MODULE=on \
     -o smbmetrics cmd/main.go
 
 # Use samba-server (with its smb.conf and samba utils) as base image
-FROM cp.stg.icr.io/cp/ibm-ceph/samba-server-rhel9:v0.5
+FROM cp.stg.icr.io/cp/ibm-ceph/samba-server-rhel9:${SAMBA_SERVER_TAG}
 COPY --from=builder /workspace/smbmetrics /bin/smbmetrics
 
 ENTRYPOINT ["/bin/smbmetrics"]
