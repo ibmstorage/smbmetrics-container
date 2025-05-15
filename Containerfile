@@ -1,5 +1,5 @@
 # Build smbmetrics
-FROM --platform=${BUILDPLATFORM:-linux/amd64} docker.io/golang:1.21 AS builder
+FROM --platform=${BUILDPLATFORM:-linux/amd64} quay.io/projectquay/golang:1.21 AS builder
 ARG GIT_VERSION="(unset)"
 ARG COMMIT_ID="(unset)"
 ARG SAMBA_SERVER_TAG="latest"
