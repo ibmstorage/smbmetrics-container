@@ -1,5 +1,5 @@
 # Build smbmetrics
-FROM --platform=${BUILDPLATFORM:-linux/amd64} quay.io/projectquay/golang:1.21 AS builder
+FROM quay.io/projectquay/golang:1.21 AS builder
 ARG GIT_VERSION="(unset)"
 ARG COMMIT_ID="(unset)"
 # these are created by docker because we've used --platform with the buildx command
